@@ -1,0 +1,41 @@
+FROM	debian:buster
+
+#Installing components
+RUN		apt-get update; \
+		apt-get upgrade; \
+		apt-get install -y nginx wget mariadb-server mariadb-client php-fpm php-mysql vim; \
+		apt-get install	-y php-mbstring php-zip php-gd php-xml php-pear php-gettext php-cgi; \
+		apt-get install -y php-curl php-gd php-intl php-mbstring php-soap php-xml php-xmlrpc php-zip	
+
+#Install Nginx
+COPY	/srcs/nginxconf /etc/nginx/sites-available/
+RUN		mkdir -p /var/www/html;	\
+		ln -s /etc/nginx/sites-available/nginxconf /etc/nginx/sites-enabled/
+
+#Installing phpmyadmin and create DB for wordpress
+COPY	/srcs/phpmyadmin.tar /tmp
+RUN		mkdir /var/www/html/phpmyadmin; \
+		tar -xf /tmp/phpmyadmin.tar -C /var/www/html/phpmyadmin; \
+		chmod 660 /var/www/html/phpmyadmin/config.inc.php; \
+		service mysql start; \
+		echo "create database wordpress;" | mysql -u root; \
+		echo "create user admin@localhost identified by 'admin';" | mysql -u root; \
+		echo "grant all privileges on wordpress.* to admin@localhost;" | mysql -u root; \
+		echo "FLUSH PRIVILEGES" | mysql -u root; \
+		echo "UPDATE mysql.user SET plugin = 'mysql_native_password' WHERE user = 'root' AND plugin = 'unix_socket';FLUSH PRIVILEGES;" | mysql -u root; \
+		echo "ALTER USER root@localhost IDENTIFIED VIA mysql_native_password; SET PASSWORD = PASSWORD('admin'); FLUSH PRIVILEGES;" | mysql -u root
+
+#Installing wordpress
+COPY	/srcs/wordpressvf.tar /tmp
+RUN		tar -xf /tmp/wordpressvf.tar -C /var/www/html; \
+		chown -R www-data:www-data /var/www/*; \
+		chmod -R 755 /var/www/*
+
+#Installing SSL
+RUN		openssl req -nodes -x509 -subj '/CN=localhost' -newkey rsa:4096 -keyout /root/key.pem -out /root/cert.pem -days 365;
+
+#Starting command
+CMD		service	mysql restart; \
+		service php7.3-fpm start; \
+		service nginx restart; \
+		sleep infinity & wait
