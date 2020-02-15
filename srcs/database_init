@@ -1,0 +1,4 @@
+CREATE DATABASE data_ft_server;
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
+GRANT ALL ON data_ft_server.* TO 'admin'@'localhost' IDENTIFIED BY 'admin' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
