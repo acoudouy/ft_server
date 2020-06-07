@@ -9,8 +9,6 @@ Build image:
 Lancement du container:
 	docker run -ti -p 8080:80 ft_server
 
-Documentation dont je me suis servi:
-
 ## Ressources
 - [Docker](https://openclassrooms.com/fr/courses/2035766-optimisez-votre-deploiement-en-creant-des-conteneurs-avec-docker/6211458-lancez-votre-premier-conteneur-en-local)
 - Nginx [I](https://kifarunix.com/install-nginx-on-debian-10-buster/) & [II](http://nginx.org/en/docs/http/request_processing.html)
