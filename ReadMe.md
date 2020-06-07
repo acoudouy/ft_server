@@ -1,6 +1,6 @@
 # ft_server
 ## L'objectif du projet est de mettre en place un serveur web en utilisant Docker sous Nginx fonctionnant avec Dedian Buster.
-Le serveur doit etre capable de faire tourner en meme temps Wordpress, PhpMyAdmin et MySQL.
+Le serveur doit être capable de faire tourner en même temps Wordpress, PhpMyAdmin et MySQL.
 Le serveur doit pouvoir utiliser le protocole SSL. 
 
 Lancement du projet:
